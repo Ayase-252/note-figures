@@ -1,0 +1,264 @@
+@startuml
+package event {
+    class EventEmitter {
+      captureRejections: boolean
+      -kCapture: boolean = false
+      _events
+      _eventsCount
+      _maxListeners
+      defaultMaxListeners: number = 10
+      kMaxEventTargetListeners
+      kMaxEventTargetListenersWarned
+      constructor(opts)
+      setMaxListeners(n, ...eventTargets)
+      {static} init(opts)
+      setMaxListeners(n: number): EventEmitter
+      getMaxListeners(): number
+      emit(type, ...args): boolean
+      addListener(type, listener): EventEmitter
+      on(type, listener): EventEmitter
+      prependListerner(type, listener): EventEmitter
+      once(type, listener): EventEmitter
+      prependOnceListener(type, listener): EventEmitter
+      removeListener(type, listener): EventEmitter
+      off(type, listener): EventEmitter
+      removeAllListeners(type): EventEmitter
+      listeners(type)
+      rawListeners(type)
+      {static} listenerCount(emitter: EventEmitter, type)
+      listenerCount(type)
+      eventNames(): string[]
+    }
+
+    note left of EventEmitter::init
+      aliase of constructor
+    endnote
+
+    note left of EventEmitter::on
+      aliase of addListener
+    endnote
+}
+
+package stream {
+    class Stream extends EventEmitter {
+        pipe(dest: Writable, options): Writable
+    }
+}
+
+package http {
+    class OutgoingMessage extends Stream {
+        outputdata
+        outputSize: number
+        writable: boolean
+        destoryed: boolean
+        _last: boolean
+        chunkedEncoding: boolean
+        shouldKeepAlive: boolean
+        sendDate: boolean
+        useChunkedEncodingByDefault: boolean
+        _removedConnection: boolean
+        _removedContLen: boolean
+        _removedTE: bollean
+        _contentLength = null
+        _hasBody: boolean
+        _trailer: string
+        -kNeedDrain: boolean
+        finished: boolean
+        -kCorked: number
+        _headerSent: boolean;
+        _closed: boolean
+        socket: Socket | null;
+        _header: string | null;
+        -kOutHeaders: null;
+        _keepAliveTimeout: null
+        _onPendingData: nop
+
+        writableFinished: boolean
+        writableObjectMode: boolean
+        writableLength: number
+        writableHighWaterMark: number
+        writableCorked: number
+        connection: Socket,
+        _renderHeaders(): Object
+        constructor()
+        cork()
+        uncork()
+        setTimeout(msecs: number, callback?: Function)
+        destroy(error?: Error)
+        _send(data, encoding?, callback?): boolean
+        _writeRaw(data, encoding?, callback?): boolean
+        _storeHeader(firstLine, header?)
+        setHeader(name: string, value: string)
+        getHeader(name: string)
+        getHeaderNames(): string[]
+        getHeaders(): Object
+        hasHeader(name: string): boolean
+        removeHeader(name: string)
+        {abstract} _implicitHeader()
+        headerSent: boolean
+        writableEnded: boolean
+        writableNeedDrain: boolean
+        write(chunk, encoding?, callback?)
+        addTrailers(headers)
+        end(chunk, encoding?, callback?)
+        _finish()
+        _flush()
+        _flushOutput()
+        flushHeaders()
+        pipe()
+    }
+
+    class ServerResponse extends OutgoingMessage {
+        req
+        sendDate: boolean = true
+        _send100: boolean = false
+        _expect_continue: boolean = false
+        useChunckedEncodingByDefault: boolean
+        shouldKeepAlive: boolean = false
+        -kServerResponseStatics: HRTime
+
+        _finish()
+        statusCode: number
+        statusMessage: undefined
+        assignSocket(socket: Socket)
+        detachSocket()
+        writeContinue()
+        writeProcessing()
+        _implicitHeader()
+        writeHead(statusCode: number, reason?: string, obj?: Object)
+        writeHeader(statusCode: number, reason?: string, obj?: Object)
+    }
+
+    class ClientRequest extends OutgoingMessage {
+        agent: Agent
+        socketPath
+        timeout
+        method
+        maxHeaderSize
+        insecureHTTPParser
+        path
+        useChunkedEncodingByDefault: boolean
+        _ended: boolean
+        res = null
+        aborted: boolean
+        timeoutCb: null
+        upgradeOrConnect: boolean = false
+        parser = null
+        maxHeaderCount = null
+        reusedSocke: boolean false
+        host,
+        protocol,
+
+        _last: boolean
+        shouldKeepAlive: boolean
+
+        _finish()
+        _implicitHeader()
+        abort()
+        destory()
+        onSocket(socket: Socket, err: Error)
+        _deferToConnect(method: string, arguments_, cb)
+        setTimeout(msecs, callback?)
+        setNoDelay(noDelay)
+        setSocketKeepAlive(enable, initialDelay)
+        clearTimeout(cb)
+    }
+
+    class Agent {}
+
+    class IncomingMessage extends stream.Readable {
+      _readableState
+      socket: net.Socket
+      constructor(socket?: net.Socket)
+      httpVersionMajor: number | null = null
+      httpVersionMinor: number | null = null
+      complete: boolean
+      -kHeader: null
+      -kHeaderCount: number = 0
+      rawHeaders: Array
+      -kTrailers: null
+      -kTrailerCount: number = 0
+      rawTrailers = Array
+      aborted: boolean = false
+      ungrade: null
+      client: net.Socket = socket
+      _consuming: boolean
+      _dumped: boolan
+      headers: Object
+      trailers: Object
+
+      setTimeout(msecs?, callback?): IncomingMessage
+      ..
+      only avaliable in request (server)
+
+      url: string
+      method: null
+      ..
+      only avaliable in response (client)
+
+      statusCode = null
+      statusMessage = null
+      ..
+
+      ..deprecated..
+      connection
+      --
+
+      _read(n)
+      _destory(err: Error, cb?: Function)
+      _addHeaderLines(headers, n)
+      _addHeaderLine(field, value, dest)
+      _dump()
+    }
+    note left of IncomingMessage::_read(n)
+      n is useless (Maybe a PR chance)
+    end note   
+
+    class Server extends net.Server{
+        -kIncomingMessage = IncomingMessage
+        -kServerResponse = ServerResponse
+        maxHeaderSize: number
+        insecureHTTPParser
+        httpAllowHalfOpen: boolean = false
+        timeout: false
+        keepAliveTimeout
+        maxHeadersCount
+        headersTimeout
+        requestTimeout
+        setTimeout(msecs?, callback?): Server
+    }
+
+    Server --- ServerResponse
+    Server -- IncomingMessage
+    OutgoingMessage --o Socket
+    ServerResponse ..> Socket
+    ClientRequest --o Agent
+    IncomingMessage --o Socket
+}
+
+package net {
+    class Server {}
+
+    class Socket {}
+}
+
+
+
+note right of ServerResponse::useChunckedEncodingByDefault
+    only when major version of HTTP < 1 or minor version of HTTP < 1 
+end note
+
+note right of ServerResponse::shouldKeepAlive
+    only when major version of HTTP < 1 or minor version of HTTP < 1 and be false
+end note
+
+
+note right of ServerResponse::kServerResponseStatics 
+    only when Http Observer is deployed
+end note
+
+note left of ServerResponse::writeHeader
+    the obj argument is quite confusion here, where its sematic meaning is "headers of response" 
+end note
+
+@enduml
