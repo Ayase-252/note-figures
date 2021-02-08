@@ -1,5 +1,5 @@
 @startuml
-package event {
+namespace event {
     class EventEmitter {
       captureRejections: boolean
       -kCapture: boolean = false
@@ -39,13 +39,13 @@ package event {
     endnote
 }
 
-package stream {
+namespace stream {
     class Stream extends EventEmitter {
         pipe(dest: Writable, options): Writable
     }
 }
 
-package http {
+namespace http {
     class OutgoingMessage extends Stream {
         outputdata
         outputSize: number
@@ -230,14 +230,44 @@ package http {
 
     Server --- ServerResponse
     Server -- IncomingMessage
-    OutgoingMessage --o Socket
-    ServerResponse ..> Socket
+    OutgoingMessage --o net.Socket
+    ServerResponse ..> net.Socket
     ClientRequest --o Agent
-    IncomingMessage --o Socket
+    IncomingMessage --o net.Socket
 }
 
-package net {
-    class Server {}
+namespace net {
+    class Server extends event.EventEmitter {
+        _connection: number = 0
+        -async_id_symbol: number
+        _headle: null
+        _usingWorkers: boolean
+        _workers: boolean
+        _unref: boolean
+
+        allowHalfOpen: boolean
+        pauseOnConnect: boolean
+        _connectionKey: string
+        listening: boolean
+        _headle
+
+        _listen2(address?, port?, addressType?: number, backlog?: number, fd?: number, flags?)
+        ref()
+        unref()
+        listen(handler, backlog?, callback?)
+        listen(option, callback?)
+        listen(path, backlog?, callback?)
+        listen(port?, host?, backlog?, callback?)
+        address(): Object|string|null
+        getConnections(cb): Server
+        close(cb): Server
+        _emitCloseIfDrained()
+        _setupWorker()
+    }
+
+    note left of net.Server::_listen2
+        setup this._handle property
+    endnote
 
     class Socket {}
 }
