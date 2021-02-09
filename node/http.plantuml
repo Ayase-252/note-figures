@@ -40,13 +40,62 @@ namespace event {
 }
 
 namespace stream {
-    class Stream extends EventEmitter {
+    class Stream extends event.EventEmitter {
         pipe(dest: Writable, options): Writable
+    }
+
+    class Readable extends stream.Stream {
+        _readableState: ReadableState
+        _read: Function
+        _destory: Function
+        _construct: Function
+
+        constructor(options)
+        destroy()
+        _undestroy()
+        _destory()
+        push(chunk: string | Buffer | Uint8Array | null, encoding: string)
+        unshift(chunk: string | Buffer | Uint8Array | null, encoding: string): boolean
+        isPaused(): boolean
+        setEncoding(enc: string)
+        read(n: number)
+        {abstract} _read(n: number)
+        pipe(dest, pipeOpts)
+        unpipe(dest)
+        on(event, fn)
+        addListener(event, fn)
+        removeListener(event, fn)
+        off(event, fn)
+        removeAllListeners(ev)
+        resume()
+        pause()
+        {static} from(iterable, opts)
+
+        readable: boolean
+        readableHighWaterMark: number
+        readableBuffer: Array
+        readableFlowing
+        readableLength
+        readtableObjectMode
+        readableEncoding
+        destroyed
+        readableEnded
+        pipesCount
+        paused
+    }
+
+    stream.Readable --> buffer.Buffer
+
+    class ReadableState {
     }
 }
 
+namespace buffer {
+    class Buffer {}
+}
+
 namespace http {
-    class OutgoingMessage extends Stream {
+    class OutgoingMessage extends stream.Stream {
         outputdata
         outputSize: number
         writable: boolean
@@ -211,7 +260,7 @@ namespace http {
       _dump()
     }
     note left of IncomingMessage::_read(n)
-      n is useless (Maybe a PR chance)
+      n is remain for perf issue
     end note   
 
     class Server extends net.Server{
@@ -228,12 +277,12 @@ namespace http {
         setTimeout(msecs?, callback?): Server
     }
 
-    Server --- ServerResponse
-    Server -- IncomingMessage
-    OutgoingMessage --o net.Socket
-    ServerResponse ..> net.Socket
-    ClientRequest --o Agent
-    IncomingMessage --o net.Socket
+    http.Server --- http.ServerResponse
+    http.Server -- http.IncomingMessage
+    http.OutgoingMessage --o net.Socket
+    http.ServerResponse ..> net.Socket
+    http.ClientRequest --o http.Agent
+    http.IncomingMessage --o net.Socket
 }
 
 namespace net {
@@ -274,20 +323,20 @@ namespace net {
 
 
 
-note right of ServerResponse::useChunckedEncodingByDefault
+note right of http.ServerResponse::useChunckedEncodingByDefault
     only when major version of HTTP < 1 or minor version of HTTP < 1 
 end note
 
-note right of ServerResponse::shouldKeepAlive
+note right of http.ServerResponse::shouldKeepAlive
     only when major version of HTTP < 1 or minor version of HTTP < 1 and be false
 end note
 
 
-note right of ServerResponse::kServerResponseStatics 
+note right of http.ServerResponse::kServerResponseStatics 
     only when Http Observer is deployed
 end note
 
-note left of ServerResponse::writeHeader
+note left of http.ServerResponse::writeHeader
     the obj argument is quite confusion here, where its sematic meaning is "headers of response" 
 end note
 
