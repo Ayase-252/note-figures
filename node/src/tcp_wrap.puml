@@ -8,6 +8,7 @@
 !include env.puml
 !include deps/v8/FunctionCallbackInfo.puml
 !include deps/libuv/uv_tcp_t.puml
+!include deps/libuv/utils.puml
 
 namespace node {
   class ConnectWrap extends ReqWrap {

@@ -1,6 +1,5 @@
 @startuml deps/libuv/uv_tcp_t
 
-!include ../v8/FunctionCallbackInfo.puml
 !include uv_stream_t.puml
 !include utils.puml
 
@@ -8,9 +7,10 @@ namespace libuv <<ExternalCModule>> {
   class uv_tcp_t implements uv_stream_t {
     int uv_tcp_init(uv_loop_t*, uv_tcp_t* handle)
     int uv_tcp_bind(uv_tcp_t* handle, const struct sockaddr* addr, unsigned int flags)
+    int uv_tcp_connect(uv_connect_t* req, uv_tcp_t* handle, const struct sockaddr* addr, uv_connect_cb cb)
   }
-
-  uv_tcp_t ..> v8.FunctionCallbackInfo
   uv_tcp_t ..> utils
+  uv_tcp_t ..> uv_loop_t
+  uv_tcp_t ..> uv_connect_t
 }
 @enduml
