@@ -1,0 +1,15 @@
+@startuml
+
+namespace node {
+  class ConnectionWrap<WrapType, UVType> extends LibuvStreamWrap {
+    #UVType handle_
+
+    +ConnectionWrap(Environment* env, Local<Object> object, ProviderType provider)
+    +{static} void OnConnection(uv_stream_t* handle, int status)
+    +{static} void AfterConnect(uv_connect_t* req, int status)
+  }
+
+  ConnectionWrap ..> Environment
+  ConnectionWrap ..> ProviderType
+}
+@enduml

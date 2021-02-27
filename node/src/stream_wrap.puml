@@ -1,0 +1,14 @@
+@startuml
+
+!include handle_wrap.puml
+!include stream_base.puml
+
+namespace node {
+  class LibuvStreamWrap extends HandleWrap, StreamBase {
+    #LibuvStreamWrap(Environment* env, v8::Local<v8::Object> object, uv_stream_t* stream, ProviderType provider)
+    #{static} v8::Local<v8::FunctionTemplate> GetConstructorTemplate(Environment* env) 
+    #void set_fd(int fd)
+  }
+  LibuvStreamWrap ..> ProviderType
+}
+@enduml

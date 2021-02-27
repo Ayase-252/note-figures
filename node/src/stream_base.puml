@@ -1,0 +1,9 @@
+@startuml
+namespace node {
+  class StreamBase extends StreamResource {
+    +{static} kInternalFieldCount
+
+    +virtual AsyncWrap* GetAsyncWrap()
+  }
+}
+@enduml

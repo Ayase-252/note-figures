@@ -1,0 +1,106 @@
+@startuml
+
+!include connection_wrap.puml
+!include req_wrap.puml
+!include handle_wrap.puml
+!include stream_wrap.puml
+!include base_object.puml
+!include env.puml
+
+namespace v8 {
+  class FunctionCallbackInfo<T> {
+    +Local<Object> Holder() const
+    +Isolate* GetIsolate () const
+    +ReturnValue<T> GetReturnValue () const
+  }
+}
+
+namespace lib {
+  namespace tcp_wrap <<InternalModule>> {
+    class TCP extends LibuvStreamWrap {
+      constructor(node.SocketType typeValue)
+      open(Number fd): ErrorDescription
+      bind(Number ip, Number port, Number flags): ErrorDescription
+      bind6(Number ip, Number port, Number flags): ErrorDescription
+      listen(Number backlog): ErrorDescription
+      connent(Object reqWrapObj, Number ip, Number port): ErrorDescription
+      connect6(Object reqWrapObj, Number ip, Number port): ErrorDescription
+      getsockname()
+      getpeername()
+      setSimultaneousAccepts()
+    }
+
+    note left of TCPWrapper::setSimultaneousAccepts
+      only on Windows
+    end note
+
+    class TCPConnectWrap extends AsyncWrap {
+
+    }
+
+    class constants {
+      SOCKET
+      SERVER
+      UV_TCP_IPV6ONLY
+    }
+  }
+}
+
+
+namespace node {
+  class ConnectWrap extends ReqWrap {
+    +ConnectWrap(Environment* env, v8::Local<v8::Object> req_wrap_obj, AsyncWrap::ProviderType provider)
+  }
+
+  enum SocketType {
+    SOCKET
+    SERVER
+  }
+
+  class TCPWrap extends ConnectionWrap {
+    +{static} void Initialize(Local<Object> target, Local<Value> unused, Local<Context> context, void* priv)
+    -{static} TCPWrap(Environment* env, Local<Object> object, ProviderType provider)
+    -{static} void New(const FunctionCallbackInfo<Value>& args)
+    -{static} void Bind(const FunctionCallbackInfo<Value>& args)
+    -{static} void Bind6(const FunctionCallbackInfo<Value>& args)
+    -{static} void Bind<T>(const FunctionCallbackInfo<Value>& args, int family, std::function<int(const char* ip_address, int port, T* addr)> uv_ip_addr) 
+    -{static} void Listen(const FunctionCallbackInfo<Value>& args)
+    -{static} void Connect(const FunctionCallbackInfo<Value>& args)
+    -{static} void Connect6(const FunctionCallbackInfo<Value>& args)
+    -{static} void Connect(const FunctionCallbackInfo<Value>& args, std::function<int(const char* ip_address, T* addr)> uv_ip_addr)
+  }
+
+  TCPWrap ..> Environment
+  TCPWrap ..> StreamBase
+  TCPWrap ..> LibuvStreamWrap
+  TCPWrap ..> SocketType
+  TCPWrap ..> ProviderType
+  TCPWrap ..> libuv.uv_tcp_t
+  TCPWrap ..> v8.FunctionCallbackInfo
+  TCPWrap ..> ConnectWrap
+  TCPWrap ..> AsyncHooks.DefaultTriggerAsyncIdScope
+}
+
+namespace libuv <<ExternalCModule>> {
+  class uv_tcp_t implements uv_stream_t {
+    int uv_tcp_init(uv_loop_t*, uv_tcp_t* handle)
+    int uv_tcp_bind(uv_tcp_t* handle, const struct sockaddr* addr, unsigned int flags)
+  }
+
+  uv_tcp_t ..> v8.FunctionCallbackInfo
+  uv_tcp_t ..> utils
+  
+
+  abstract uv_stream_t {
+    int uv_listen(uv_stream_t* stream, int backlog, uv_connection_cb cb)
+  }
+
+  class utils {
+    int uv_ip4_addr(const char* ip, int port, struct sockaddr_in* addr)
+    int uv_ip6_addr(const char* ip, int port, struct sockaddr_in6* addr)
+  }
+
+  note "It is a C module where term class does not exist. \n We use class as an assemble of functions in the module." as _
+}
+
+@enduml

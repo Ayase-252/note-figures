@@ -1,0 +1,21 @@
+@startuml
+!include async_wrap.puml
+
+namespace node {
+  class ReqWrapBase {
+
+  }
+  
+  class ReqWrap<T> extends AsyncWrap, ReqWrapBase {
+    +ReqWrap(Environment* env, v8::Local<v8::Object> object, AsyncWrap::ProviderType provider)
+    +void Dispatched()
+    +void Reset()
+    +T* req()
+    +void Cancel() final
+    +AsyncWrap* GetAsyncWrap() override
+    +{static} ReqWrap* from_req(T* req)
+    +int Dispatch<LibuvFunction, Args>(LibuvFunction fn, Args... args)
+    -friend int GenDebugSymbols()
+  }
+}
+@enduml

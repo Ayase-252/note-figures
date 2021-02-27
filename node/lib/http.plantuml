@@ -1,5 +1,5 @@
 @startuml
-namespace event {
+namespace events {
     class EventEmitter {
       captureRejections: boolean
       -kCapture: boolean = false

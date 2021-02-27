@@ -1,0 +1,9 @@
+@startuml
+!include async_wrap.puml
+
+namespace node {
+  class HandleWrap extends AsyncWrap {
+
+  }
+}
+@enduml
