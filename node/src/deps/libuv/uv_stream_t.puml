@@ -1,0 +1,9 @@
+@startuml deps/libuv/uv_stream_t
+
+namespace libuv <<ExternalCModule>> {
+  abstract uv_stream_t {
+    int uv_listen(uv_stream_t* stream, int backlog, uv_connection_cb cb)
+  }
+}
+
+@enduml

@@ -1,4 +1,4 @@
-@startuml v8
+@startuml v8/FunctionCallbackInfo
 
 namespace v8 {
   class FunctionCallbackInfo<T> {
