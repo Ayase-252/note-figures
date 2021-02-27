@@ -1,0 +1,11 @@
+@startuml v8
+
+namespace v8 {
+  class FunctionCallbackInfo<T> {
+    +Local<Object> Holder() const
+    +Isolate* GetIsolate () const
+    +ReturnValue<T> GetReturnValue () const
+  }
+}
+
+@enduml

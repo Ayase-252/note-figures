@@ -1,0 +1,5 @@
+@startuml memory_tracker
+namespace node {
+  class MemoryRetainer {}
+}
+@enduml

@@ -1,4 +1,4 @@
-@startuml
+@startuml stream_wrap
 
 !include handle_wrap.puml
 !include stream_base.puml

@@ -1,0 +1,34 @@
+@startuml JS Side Binding for tcp_wrap module
+
+namespace lib {
+  namespace tcp_wrap <<InternalModule>> {
+    class TCP extends LibuvStreamWrap {
+      constructor(node.SocketType typeValue)
+      open(Number fd): ErrorDescription
+      bind(Number ip, Number port, Number flags): ErrorDescription
+      bind6(Number ip, Number port, Number flags): ErrorDescription
+      listen(Number backlog): ErrorDescription
+      connent(Object reqWrapObj, Number ip, Number port): ErrorDescription
+      connect6(Object reqWrapObj, Number ip, Number port): ErrorDescription
+      getsockname()
+      getpeername()
+      setSimultaneousAccepts()
+    }
+
+    note left of TCPWrapper::setSimultaneousAccepts
+      only on Windows
+    end note
+
+    class TCPConnectWrap extends AsyncWrap {
+
+    }
+
+    class constants {
+      SOCKET
+      SERVER
+      UV_TCP_IPV6ONLY
+    }
+  }
+}
+
+@enduml

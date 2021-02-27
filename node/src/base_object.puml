@@ -1,4 +1,6 @@
-@startuml
+@startuml base_object
+!include memory_tracker.puml
+
 namespace node {
   class BaseObject extends MemoryRetainer {
     +BaseObject(Environment* env, v8::Local<v8::Object> object)

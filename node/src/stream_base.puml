@@ -1,4 +1,4 @@
-@startuml
+@startuml stream_base
 namespace node {
   class StreamBase extends StreamResource {
     +{static} kInternalFieldCount
