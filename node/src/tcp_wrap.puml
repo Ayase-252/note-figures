@@ -7,6 +7,7 @@
 !include base_object.puml
 !include env.puml
 !include deps/v8/FunctionCallbackInfo.puml
+!include deps/v8/EscapableHandleScope.puml
 !include deps/libuv/uv_tcp_t.puml
 !include deps/libuv/utils.puml
 
@@ -31,7 +32,10 @@ namespace node {
     -{static} void Connect(const FunctionCallbackInfo<Value>& args)
     -{static} void Connect6(const FunctionCallbackInfo<Value>& args)
     -{static} void Connect(const FunctionCallbackInfo<Value>& args, std::function<int(const char* ip_address, T* addr)> uv_ip_addr)
+    -{static} void SetNoDelay(const FunctionCallbackInfo<Value>& args)
   }
+
+  TCPWrap ..> "<TCPWrap, uv_tcp_t>" ConnectionWrap
 
   TCPWrap ..> Environment
   TCPWrap ..> StreamBase
@@ -42,6 +46,7 @@ namespace node {
   TCPWrap ..> v8.FunctionCallbackInfo
   TCPWrap ..> ConnectWrap
   TCPWrap ..> AsyncHooks.DefaultTriggerAsyncIdScope
+  TCPWrap ..> v8.EscapableHandleScope
 }
 
 @enduml

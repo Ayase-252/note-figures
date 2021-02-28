@@ -1,0 +1,17 @@
+@startuml cluster
+
+namespace lib {
+  namespace cluster {
+    class Cluster <<module>>{
+      {static} isMaster
+      {static} isPrimary
+      {static} _getServer(server, serverQuery, callback)
+    }
+
+    note left of Cluster::isPrimary
+      aliase of Cluster.isMaster
+    end note
+  }
+}
+
+@enduml

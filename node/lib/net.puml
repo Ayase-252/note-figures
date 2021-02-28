@@ -1,0 +1,40 @@
+@startuml events
+!include events.puml
+!include cluster.puml
+!include node_binding/tcp_wrap.puml
+
+namespace lib {
+  namespace net<<PublicModule>> {
+    class Server extends lib.events.EventEmitter {
+      -_connections: number
+      -[asunc_id_symbol]: number
+      -_handle: null | TCP | Pipe
+      -_usingWorkers: boolean = false
+      -_unref: boolean = false
+      -_pipeName: string
+      -_worker: Any[]
+      +allowHalfOpen: boolean = false
+      +pausedOnConnect: boolean
+      +listening: ReadOnly<boolean>
+
+      +constructor(options, connectionListener)
+      +constructor(connectionListener)
+      +listen(handle [,blacklog][,callback]): this
+      +listen(options[, callback]): this
+      +listen(path[, backlog][, callback]): this
+      +listen([port[, host[, backlog]]][, callback]): this
+      -listen2(address, port, addressType, backlog, fd, flags)
+      +address(): Object
+      +getConnections(cb): this
+      +close(cb): this
+      -_emitCloseIfDrained()
+      -_setupWorker(socketList)
+      +ref(): this
+      +unref(): this
+    }
+
+    Server *-> lib.tcp_wrap.TCP
+    Server ..> lib.cluster.Cluster
+  }
+}
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+
+namespace v8 {
+  class Object {
+    +Maybe<bool> Set(Local<Context> context, Local<Value> key, Local<Value> value)
+    +Maybe<bool> Set(Local<Context> context, uint32_t index, Local<Value> value)	
+  }
+
+}
+@enduml

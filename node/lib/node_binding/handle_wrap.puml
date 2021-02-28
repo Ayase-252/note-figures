@@ -1,0 +1,14 @@
+@startuml node_binding/handle_wrap
+
+namespace lib {
+  namespace handle_wrap <<InternalNodeModule>> {
+    class HandleWrap extends AsyncWrap {
+      close()
+      hasRef()
+      ref()
+      unref()
+    }
+  }
+}
+
+@enduml

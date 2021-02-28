@@ -8,9 +8,19 @@ namespace libuv <<ExternalCModule>> {
     int uv_tcp_init(uv_loop_t*, uv_tcp_t* handle)
     int uv_tcp_bind(uv_tcp_t* handle, const struct sockaddr* addr, unsigned int flags)
     int uv_tcp_connect(uv_connect_t* req, uv_tcp_t* handle, const struct sockaddr* addr, uv_connect_cb cb)
+    int uv_tcp_getsockname(const uv_tcp_t* handle, struct sockaddr* name, int* namelen)
+    int uv_tcp_getpeername(const uv_tcp_t* handle, struct sockaddr* name, int* namelen)
+    int uv_tcp_nodelay(uv_tcp_t* handle, int enable)
+    int uv_tcp_keepalive(uv_tcp_t* handle, int enable, unsigned int delay)
   }
   uv_tcp_t ..> utils
   uv_tcp_t ..> uv_loop_t
   uv_tcp_t ..> uv_connect_t
+
+  note left of uv_tcp_t::uv_tcp_keepalive
+    After delay is reached, 10 successive probes in 1 req/s will happen.
+    if the connection is still lost, the handle is destroyed with a `UV_ETIMEDOUT`
+    error passed to the corresponding callback.
+  end note
 }
 @enduml

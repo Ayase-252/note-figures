@@ -4,6 +4,10 @@ namespace libuv <<ExternalCModule>> {
   abstract uv_stream_t {
     int uv_listen(uv_stream_t* stream, int backlog, uv_connection_cb cb)
   }
+
+  note left of uv_stream_t::uv_listen
+    void (*uv_connection_cb)(uv_stream_t* server, int status)
+  end note
 }
 
 @enduml

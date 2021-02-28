@@ -1,0 +1,46 @@
+@startuml events
+
+namespace lib {
+  namespace events<<PublicModule>> {
+    class EventEmitter {
+      captureRejections: boolean
+      -kCapture: boolean = false
+      _events
+      _eventsCount
+      _maxListeners
+      defaultMaxListeners: number = 10
+      kMaxEventTargetListeners
+      kMaxEventTargetListenersWarned
+      {static} usingDomain: boolean = false
+      constructor(opts)
+      setMaxListeners(n, ...eventTargets)
+      {static} init(opts)
+      setMaxListeners(n: number): EventEmitter
+      getMaxListeners(): number
+      emit(type, ...args): boolean
+      addListener(type, listener): EventEmitter
+      on(type, listener): EventEmitter
+      prependListerner(type, listener): EventEmitter
+      once(type, listener): EventEmitter
+      prependOnceListener(type, listener): EventEmitter
+      removeListener(type, listener): EventEmitter
+      off(type, listener): EventEmitter
+      removeAllListeners(type): EventEmitter
+      listeners(type)
+      rawListeners(type)
+      {static} listenerCount(emitter: EventEmitter, type)
+      listenerCount(type)
+      eventNames(): string[]
+    }
+
+    note left of EventEmitter::init
+      aliase of constructor
+    endnote
+
+    note left of EventEmitter::on
+      aliase of addListener
+    endnote
+  }
+}
+
+@enduml

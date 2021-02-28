@@ -1,0 +1,11 @@
+@startuml v8/FunctionCallbackInfo
+
+namespace v8 {
+  class EscapableHandleScope extends HandleScope {
+    +EscapableHandleScope(Isolate *isolate)
+  }
+
+  EscapableHandleScope ..> Isolate
+}
+
+@enduml

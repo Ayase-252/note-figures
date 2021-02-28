@@ -1,7 +1,16 @@
 @startuml async_wrap
+
+!include base_object.puml
+
 namespace node {
   class AsyncWrap extends BaseObject {
     +AsyncWrap(Environment* env, v8::Local<v8::Object> object, ProviderType provider, double execution_async_id = kInvalidAsyncId)
+    +v8::MaybeLocal<v8::Value> MakeCallback(const v8::Local<v8::Function> cb, int argc, v8::Local<v8::Value>* argv)
+    +v8::MaybeLocal<v8::Value> MakeCallback(const v8::Local<v8::Symbol> symbol, int argc, v8::Local<v8::Value>* argv)
+    +v8::MaybeLocal<v8::Value> MakeCallback(const v8::Local<v8::String> symbol, int argc, v8::Local<v8::Value>* argv)
+    +v8::MaybeLocal<v8::Value> MakeCallback(const v8::Local<v8::Name> symbol, int argc, v8::Local<v8::Value>* argv)
+
+    +double get_async_id() const
   }
 
   enum ProviderType {

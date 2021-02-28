@@ -4,6 +4,9 @@
 namespace node {
   class BaseObject extends MemoryRetainer {
     +BaseObject(Environment* env, v8::Local<v8::Object> object)
+    +Environment* env() const
   }
+
+  BaseObject ..> Environment
 }
 @enduml
