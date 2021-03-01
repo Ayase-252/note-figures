@@ -1,0 +1,14 @@
+@startuml node.puml
+
+namespace node {
+  class MultiIsolatePlatform extends v8.Platform {
+    +virtual void RegisterIsolate(v8::Isolate* isolate, struct uv_loop_s* loop) = 0
+    +virtual void RegisterIsolate(v8::Isolate* isolate, IsolatePlatformDelegate* delegate) = 0
+    +virtual void DrainTasks(v8::Isolate* isolate) = 0;
+  }
+
+  class ArrayBufferAllocator extends v8.ArrayBuffer.Allocator {
+    +{static} std::unique_ptr<ArrayBufferAllocator> Create(bool always_debug = false)
+  }
+}
+@enduml

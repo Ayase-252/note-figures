@@ -1,0 +1,27 @@
+@startuml node_main_instance.puml
+
+!include deps/libuv/uv_loop_t.puml
+!include node.puml
+
+namespace node {
+  class NodeMainInstance {
+      static std::unique_ptr<ExternalReferenceRegistry> registry_
+      std::vector<std::string> args_
+      std::vector<std::string> exec_args_
+      std::unique_ptr<ArrayBufferAllocator> array_buffer_allocator_
+      v8::Isolate* isolate_
+      MultiIsolatePlatform* platform_
+      std::unique_ptr<IsolateData> isolate_data_
+      bool owns_isolate_ = false
+      bool deserialize_mode_ = false
+
+    +NodeMainInstance(v8::Isolate::CreateParams* params, uv_loop_t* event_loop, MultiIsolatePlatform* platform, const std::vector<std::string>& args, const std::vector<std::string>& exec_args, const std::vector<size_t>* per_isolate_data_indexes = nullptr)
+    +int Run(const EnvSerializeInfo* env_info)
+  }
+
+  NodeMainInstance ..> libuv.uv_loop_t
+  NodeMainInstance --> MultiIsolatePlatform
+  NodeMainInstance --> ArrayBufferAllocator
+  
+}
+@enduml
