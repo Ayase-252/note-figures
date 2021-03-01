@@ -1,0 +1,8 @@
+@startuml deps/libuv/utils
+namespace libuv <<ExternalCModule>> {
+  class internal {
+    uint64_t uv__hrtime(uv_clocktype_t type)
+    void uv__signal_global_once_init(void)
+  }
+}
+@enduml

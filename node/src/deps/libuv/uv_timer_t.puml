@@ -1,0 +1,8 @@
+@startuml deps/libuv/uv_timer.puml
+
+namespace libuv <<ExternalCModule>> {
+  class uv_timer_t extends uv_handle_t {
+  }
+}
+
+@enduml
