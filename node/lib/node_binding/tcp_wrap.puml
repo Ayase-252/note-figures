@@ -1,10 +1,15 @@
 @startuml node_binding/tcp_wrap
 
 !include stream_wrap.puml
+!include async_wrap.puml
 
 namespace lib {
   namespace tcp_wrap <<InternalNodeModule>> {
     class TCP extends lib.stream_wrap.LibuvStreamWrap {
+      +reading: boolean
+      +[own_symbol]
+      onconnection
+
       constructor(node.SocketType typeValue)
       open(Number fd): ErrorDescription
       bind(Number ip, Number port, Number flags): ErrorDescription
@@ -23,7 +28,7 @@ namespace lib {
       only on Windows
     end note
 
-    class TCPConnectWrap extends AsyncWrap {
+    class TCPConnectWrap extends lib.async_wrap.AsyncWrap {
 
     }
 

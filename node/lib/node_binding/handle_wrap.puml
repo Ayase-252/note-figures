@@ -1,8 +1,10 @@
 @startuml node_binding/handle_wrap
 
+!include async_wrap.puml
+
 namespace lib {
   namespace handle_wrap <<InternalNodeModule>> {
-    class HandleWrap extends AsyncWrap {
+    class HandleWrap extends lib.async_wrap.AsyncWrap {
       close()
       hasRef()
       ref()

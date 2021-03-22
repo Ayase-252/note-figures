@@ -1,0 +1,13 @@
+@startuml async_wrap
+
+namespace lib {
+  namespace async_wrap <<InternalNodeModule>> {
+    class AsyncWrap {
+      +getAsyncId()
+      +asyncReset()
+      +getProviderType()
+    }
+  }
+}
+
+@enduml

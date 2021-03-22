@@ -1,0 +1,27 @@
+@startuml
+
+namespace lib {
+  namespace stream_base <<InternalNodeModule>> {
+    class StreamBase {
+      {readonly} fd
+      {readonly} _externalStream
+      {readonly} bytesRead
+      {readonly} bytesWritten
+      isStreambase = true
+      onread
+
+      readStart()
+      readStop()
+      shotdown(req_wrap_obj)
+      useUserBuffer(data)
+      writev(req_wrap_obj, chunks, all_buffers)
+      writeBuffer(req_wrap_obj, buffer)
+      writeAsciiString(req_wrap_obj, string, send_handle_obj?)
+      writeUtf8String(req_wrap_obj, string, send_handle_obj?)
+      writeUcs2String(req_wrap_obj, string, send_handle_obj?)
+      writeLatin1String(req_wrap_obj, string, send_handle_obj?)
+    }
+  }
+}
+
+@enduml

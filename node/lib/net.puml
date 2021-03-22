@@ -2,12 +2,13 @@
 !include events.puml
 !include cluster.puml
 !include node_binding/tcp_wrap.puml
+!include node_binding/stream_wrap.puml
 
 namespace lib {
   namespace net<<PublicModule>> {
     class Server extends lib.events.EventEmitter {
       -_connections: number
-      -[asunc_id_symbol]: number
+      -[async_id_symbol]: number
       -_handle: null | TCP | Pipe
       -_usingWorkers: boolean = false
       -_unref: boolean = false
@@ -35,6 +36,39 @@ namespace lib {
 
     Server *-> lib.tcp_wrap.TCP
     Server ..> lib.cluster.Cluster
+
+    class Socket extends lib.stream.Duplex {
+      +connecting: boolean = false
+      -[async_id_symbol]: number
+      -_hadError: boolean
+      -[kHandler]
+      -_handler: Pipe | TCP
+      -_parent
+      -_host
+      -[kSetNoDelay]
+      -[kLastWriteQueueSize]
+      -[kTimeout]
+      -[kBuffer]
+      -[kBufferCb]
+      -[kBufferGen]
+      -_pendingData
+      -_pendingEnconding
+      readableFlowing: boolean
+      server
+      _server
+      -[kBytesRead]: number
+      -[kBytesWritten]: number
+      pending: boolean
+
+
+      +constructor(options)
+      -_unrefTimer()
+      -_final(cb)
+    }
+
+    Socket *-> lib.tcp_wrap.TCP
+    Socket *-> lib.pipe_wrap.Pipe
+    Socket ..> lib.stream_wrap.ShutdownWrap
   }
 }
 @enduml
