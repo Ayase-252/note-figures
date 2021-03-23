@@ -6,6 +6,12 @@
 
 namespace lib {
   namespace net<<PublicModule>> {
+    class Address {
+      port: number
+      family: string
+      address: string
+    }
+
     class Server extends lib.events.EventEmitter {
       -_connections: number
       -[async_id_symbol]: number
@@ -39,6 +45,7 @@ namespace lib {
 
     class Socket extends lib.stream.Duplex {
       +connecting: boolean = false
+      -{readonly} _connecting: boolean
       -[async_id_symbol]: number
       -_hadError: boolean
       -[kHandler]
@@ -59,16 +66,37 @@ namespace lib {
       -[kBytesRead]: number
       -[kBytesWritten]: number
       pending: boolean
+      +timeout?: number
+      +{readonly}readyState: "opening" | "open" | "readOnly" | "writeOnly" | "close"
+      +{readonly}bufferSize: number
 
 
       +constructor(options)
       -_unrefTimer()
       -_final(cb)
+      +setTimeout(number msecs, function callback): this
+      +setNoDelay(boolean isEnabled?): this
+      +setKeepAlive(boolean isEnabled, number msecs): this 
+      +address(): Address
+      -_getsocketname(): Address
     }
+
+    note left of Socket::address
+      aliase of _getsocketname
+    end note 
+
+    note left of Socket::_connecting
+      readonly version of connecting
+    end note
+
+    note left of Socket::bufferSize
+      deprecated since v14.6.0, prefer `writable.writableLength`
+    end note
 
     Socket *-> lib.tcp_wrap.TCP
     Socket *-> lib.pipe_wrap.Pipe
     Socket ..> lib.stream_wrap.ShutdownWrap
+    Socket ..> Address
   }
 }
 @enduml
