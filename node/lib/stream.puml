@@ -1,0 +1,86 @@
+@startuml
+
+!include events.puml
+
+namespace lib {
+  namespace stream<<Public Module>> {
+    class Stream extends lib.events.EventEmitter {
+      +pipe(dest, options)
+    }
+
+    class Readable {
+
+    }
+
+    class WritableState {
+      objectMode: boolean
+      highWaterMark: number
+      finalCalled: boolean
+      needDrain: boolean
+      ending: boolean
+      ended: boolean
+      finished: boolean
+      destroyed: boolean
+      decodeStrings: boolean
+      defaultEncoding: boolean
+      length: number
+      writing: boolean
+      sync: boolean
+      bufferProcessing: boolean
+      writecb: null
+      writelen: number
+      afterWriteTickInfo: null
+      pendingcb: number
+      constructed: boolean
+      prefinished: boolean
+      errorEmitted: boolean
+      emitClose: boolean
+      autoDestroy: boolean
+      errored: null
+      closed: boolean
+      closeEmitted: boolean
+      [kOnFinished]: Array
+      buffered?
+      bufferedIndex?
+      bufferedRequestCount
+
+      allBuffers: boolean
+      allNoop: boolean
+
+      onwrite()
+      getBuffer()
+    }
+
+    class Writable extends Stream {
+      -_writableState: WritableState
+
+      -{optional} _write()
+      -{optional}_writev()
+      -{optional}_destroy()
+      -{optional}_construct()
+      +[Symbol.hasInstance](object)
+      +pipe()
+      +write(chunk, encoding?, callback?): boolean
+      -_write(chunk, enconding?, cb?)
+      +{abstract}_writev(chunks: Array, cb?)
+      +end(chunk?, encoding?, callback?): Writable
+    }
+
+    Writable *--> WritableState
+    note left of Writable::pipe
+      it just throw a error if you attempts to call it
+    endnote
+
+    class Duplex extends Readable, Writable {
+
+    }
+
+    class Transfrom extends Duplex {
+
+    }
+
+    class PassThrough
+  }
+}
+
+@enduml
