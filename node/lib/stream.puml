@@ -16,6 +16,17 @@ namespace lib {
         _read: Function
         _destory: Function
         _construct: Function
+        readable: boolean
+        readableHighWaterMark: number
+        readableBuffer: Array
+        readableFlowing
+        readableLength
+        readtableObjectMode
+        readableEncoding
+        destroyed
+        readableEnded
+        pipesCount
+        paused
 
         constructor(options)
         destroy()
@@ -37,18 +48,6 @@ namespace lib {
         resume()
         pause()
         {static} from(iterable, opts)
-
-        readable: boolean
-        readableHighWaterMark: number
-        readableBuffer: Array
-        readableFlowing
-        readableLength
-        readtableObjectMode
-        readableEncoding
-        destroyed
-        readableEnded
-        pipesCount
-        paused
     }
 
     Readable *--> ReadableState
