@@ -53,9 +53,17 @@ namespace lib {
 
     class Writable extends Stream {
       -_writableState: WritableState
+      +destroyed: boolean
+      +writable: boolean
+      +{readonly}writableFinished: boolean
+      +{readonly}writableObjectMode: boolean
+      +{readonly}writableBuffer: ret of WritableState.getBuffer
+      +{readonly}writableEnded: boolean
+      +{readonly}writableNeedDrain: boolean
+      +{readonly}writableHighWaterMark: number
+      +{readonly}writableCorked: number
+      +{readonly}writableLength: number
 
-      -{optional} _write()
-      -{optional}_writev()
       -{optional}_destroy()
       -{optional}_construct()
       +[Symbol.hasInstance](object)
@@ -64,6 +72,12 @@ namespace lib {
       -_write(chunk, enconding?, cb?)
       +{abstract}_writev(chunks: Array, cb?)
       +end(chunk?, encoding?, callback?): Writable
+      +cork()
+      +uncork()
+      +setDefaultEncoding(enconding): Writable
+      +destroy(err, cb): Writable
+      -_undestroy()
+      -_destroy(err, cb)
     }
 
     Writable *--> WritableState
