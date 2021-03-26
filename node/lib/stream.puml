@@ -126,14 +126,31 @@ namespace lib {
     endnote
 
     class Duplex extends Readable, Writable {
-
+      +destoryed: boolean
     }
+
+    note left of Duplex::destoryed
+      true, iff. both Readable side and WritableState are destoryed.
+    endnote
 
     class Transfrom extends Duplex {
+      [kCallBack]
+      final(callback) 
 
+      +{abstract}_flush(cb: (err, data) => void)
+      +{abstract}_transform(chunk, enconding, cb)
+      -_write(chunk, encoding, callback)
+      -_read()
     }
 
-    class PassThrough
+    class PassThrough extends Transform {
+      _transform(chunk, enconding, cb)
+    }
+
+    note left of PassThrough
+      a naive implementation of Transform which simply passes input to 
+      output
+    endnote
   }
 }
 
