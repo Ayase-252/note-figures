@@ -1,4 +1,4 @@
-@startuml
+@startuml http
 
 !include stream.puml
 !include net.puml

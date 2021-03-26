@@ -1,4 +1,4 @@
-@startuml
+@startuml stream
 
 !include events.puml
 
