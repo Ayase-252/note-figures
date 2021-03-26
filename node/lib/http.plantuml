@@ -1,101 +1,11 @@
 @startuml
-namespace events {
-    class EventEmitter {
-      captureRejections: boolean
-      -kCapture: boolean = false
-      _events
-      _eventsCount
-      _maxListeners
-      defaultMaxListeners: number = 10
-      kMaxEventTargetListeners
-      kMaxEventTargetListenersWarned
-      constructor(opts)
-      setMaxListeners(n, ...eventTargets)
-      {static} init(opts)
-      setMaxListeners(n: number): EventEmitter
-      getMaxListeners(): number
-      emit(type, ...args): boolean
-      addListener(type, listener): EventEmitter
-      on(type, listener): EventEmitter
-      prependListerner(type, listener): EventEmitter
-      once(type, listener): EventEmitter
-      prependOnceListener(type, listener): EventEmitter
-      removeListener(type, listener): EventEmitter
-      off(type, listener): EventEmitter
-      removeAllListeners(type): EventEmitter
-      listeners(type)
-      rawListeners(type)
-      {static} listenerCount(emitter: EventEmitter, type)
-      listenerCount(type)
-      eventNames(): string[]
-    }
 
-    note left of EventEmitter::init
-      aliase of constructor
-    endnote
+!include stream.puml
+!include net.puml
 
-    note left of EventEmitter::on
-      aliase of addListener
-    endnote
-}
-
-namespace stream {
-    class Stream extends event.EventEmitter {
-        pipe(dest: Writable, options): Writable
-    }
-
-    class Readable extends stream.Stream {
-        _readableState: ReadableState
-        _read: Function
-        _destory: Function
-        _construct: Function
-
-        constructor(options)
-        destroy()
-        _undestroy()
-        _destory()
-        push(chunk: string | Buffer | Uint8Array | null, encoding: string)
-        unshift(chunk: string | Buffer | Uint8Array | null, encoding: string): boolean
-        isPaused(): boolean
-        setEncoding(enc: string)
-        read(n: number)
-        {abstract} _read(n: number)
-        pipe(dest, pipeOpts)
-        unpipe(dest)
-        on(event, fn)
-        addListener(event, fn)
-        removeListener(event, fn)
-        off(event, fn)
-        removeAllListeners(ev)
-        resume()
-        pause()
-        {static} from(iterable, opts)
-
-        readable: boolean
-        readableHighWaterMark: number
-        readableBuffer: Array
-        readableFlowing
-        readableLength
-        readtableObjectMode
-        readableEncoding
-        destroyed
-        readableEnded
-        pipesCount
-        paused
-    }
-
-    stream.Readable --> buffer.Buffer
-
-    class ReadableState {
-    }
-}
-
-namespace buffer {
-    class Buffer {}
-}
-
-namespace http {
-    class OutgoingMessage extends stream.Stream {
+namespace lib {
+  namespace http {
+    class OutgoingMessage extends lib.stream.Stream {
         outputdata
         outputSize: number
         writable: boolean
@@ -215,7 +125,7 @@ namespace http {
 
     class Agent {}
 
-    class IncomingMessage extends stream.Readable {
+    class IncomingMessage extends lib.stream.Readable {
       _readableState
       socket: net.Socket
       constructor(socket?: net.Socket)
@@ -263,7 +173,7 @@ namespace http {
       n is remain for perf issue
     end note   
 
-    class Server extends net.Server{
+    class Server extends lib.net.Server{
         -kIncomingMessage = IncomingMessage
         -kServerResponse = ServerResponse
         maxHeaderSize: number
@@ -277,67 +187,31 @@ namespace http {
         setTimeout(msecs?, callback?): Server
     }
 
-    http.Server --- http.ServerResponse
-    http.Server -- http.IncomingMessage
-    http.OutgoingMessage --o net.Socket
-    http.ServerResponse ..> net.Socket
-    http.ClientRequest --o http.Agent
-    http.IncomingMessage --o net.Socket
+    Server --- ServerResponse
+    Server -- IncomingMessage
+    OutgoingMessage --o lib.net.Socket
+    ServerResponse ..> lib.net.Socket
+    ClientRequest --o Agent
+    IncomingMessage --o lib.net.Socket
+
+    note right of ServerResponse::useChunckedEncodingByDefault
+      only when major version of HTTP < 1 or minor version of HTTP < 1 
+    end note
+
+    note right of ServerResponse::shouldKeepAlive
+      only when major version of HTTP < 1 or minor version of HTTP < 1 and be false
+    end note
+
+
+    note right of ServerResponse::kServerResponseStatics 
+      only when Http Observer is deployed
+    end note
+
+    note left of ServerResponse::writeHeader
+      the obj argument is quite confusion here, where its sematic meaning is "headers of response" 
+    end note
+  }
 }
 
-namespace net {
-    class Server extends event.EventEmitter {
-        _connection: number = 0
-        -async_id_symbol: number
-        _headle: null
-        _usingWorkers: boolean
-        _workers: boolean
-        _unref: boolean
-
-        allowHalfOpen: boolean
-        pauseOnConnect: boolean
-        _connectionKey: string
-        listening: boolean
-        _headle
-
-        _listen2(address?, port?, addressType?: number, backlog?: number, fd?: number, flags?)
-        ref()
-        unref()
-        listen(handler, backlog?, callback?)
-        listen(option, callback?)
-        listen(path, backlog?, callback?)
-        listen(port?, host?, backlog?, callback?)
-        address(): Object|string|null
-        getConnections(cb): Server
-        close(cb): Server
-        _emitCloseIfDrained()
-        _setupWorker()
-    }
-
-    note left of net.Server::_listen2
-        setup this._handle property
-    endnote
-
-    class Socket {}
-}
-
-
-
-note right of http.ServerResponse::useChunckedEncodingByDefault
-    only when major version of HTTP < 1 or minor version of HTTP < 1 
-end note
-
-note right of http.ServerResponse::shouldKeepAlive
-    only when major version of HTTP < 1 or minor version of HTTP < 1 and be false
-end note
-
-
-note right of http.ServerResponse::kServerResponseStatics 
-    only when Http Observer is deployed
-end note
-
-note left of http.ServerResponse::writeHeader
-    the obj argument is quite confusion here, where its sematic meaning is "headers of response" 
-end note
 
 @enduml

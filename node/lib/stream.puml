@@ -4,13 +4,54 @@
 
 namespace lib {
   namespace stream<<Public Module>> {
-    class Stream extends lib.events.EventEmitter {
-      +pipe(dest, options)
+    class Stream extends event.EventEmitter {
+        pipe(dest: Writable, options): Writable
     }
 
-    class Readable {
-
+    class ReadableState {
     }
+
+    class Readable extends Stream {
+        _readableState: ReadableState
+        _read: Function
+        _destory: Function
+        _construct: Function
+
+        constructor(options)
+        destroy()
+        _undestroy()
+        _destory()
+        push(chunk: string | Buffer | Uint8Array | null, encoding: string)
+        unshift(chunk: string | Buffer | Uint8Array | null, encoding: string): boolean
+        isPaused(): boolean
+        setEncoding(enc: string)
+        read(n: number)
+        {abstract} _read(n: number)
+        pipe(dest, pipeOpts)
+        unpipe(dest)
+        on(event, fn)
+        addListener(event, fn)
+        removeListener(event, fn)
+        off(event, fn)
+        removeAllListeners(ev)
+        resume()
+        pause()
+        {static} from(iterable, opts)
+
+        readable: boolean
+        readableHighWaterMark: number
+        readableBuffer: Array
+        readableFlowing
+        readableLength
+        readtableObjectMode
+        readableEncoding
+        destroyed
+        readableEnded
+        pipesCount
+        paused
+    }
+
+    Readable *--> ReadableState
 
     class WritableState {
       objectMode: boolean
