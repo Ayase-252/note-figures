@@ -1,0 +1,21 @@
+@startuml
+
+!include stream.puml
+!include net.puml
+
+namespace lib {
+  namespace process <<Public Module>>{
+    class Process <<global object as `process`>> {
+      stdin: tty.ReadStream | fs.ReadStream | net.Socket | stream.Readable
+    }
+    
+    Process *--> lib.stream.Readable
+    Process *--> lib.net.Socket
+
+    note left of Process::stdin
+      Based on the type of fd, the stdin could be different.
+    endnote
+  }
+}
+
+@enduml
