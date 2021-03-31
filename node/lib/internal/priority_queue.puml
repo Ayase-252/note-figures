@@ -1,0 +1,29 @@
+@startuml priority_queue
+
+namespace lib {
+  namespace internal {
+      namespace priority_queue <<Internal Module>> {
+        class PriorityQueue<T> {
+          -[kCompare]: function
+          -[kSetPosition]: function
+          -[kHeap]: Array
+          -[kSize]: number
+          +constructor(comparator, setPosition)
+          +insert(value: T)
+          +peek(): T | undefined
+          +percolateDown(pos: number)
+          +percolateUp(pos: number)
+          +removeAt(pos: number)
+          +shift(): T | null
+        }
+
+        note left of PriorityQueue::insert
+          It dynamically allocates more memories if kHeap is full. 
+          Starting from 64.
+        endnote
+    }
+  }
+
+}
+
+@enduml
