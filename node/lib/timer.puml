@@ -1,0 +1,11 @@
+@startuml timer.puml
+
+namespace lib {
+  namespace timer <<Public Module>> {
+    class TimerGlobal {
+      {static} setImmediate(cb, ...args): Immediate
+    }
+  }
+}
+
+@enduml

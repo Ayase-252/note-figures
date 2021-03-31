@@ -1,0 +1,64 @@
+@startuml
+
+!include linkedlist.puml
+!include priority_queue.puml
+
+namespace lib {
+  namespace internal {
+    namespace timer <<internal>> {
+      class Timeout {
+        _idleTimeout: number
+        _idlePrev: Timeout
+        _idleNext: Timeout
+        _idleStart: null
+        _onTimeout: function
+        _timerArgs: Array
+        _repeat: number | null
+        _destroyed: boolean
+        -[kRefed]: boolean
+        -[kHasPrimitive]: boolean
+
+        constructor(callback: function, after: number, args, isRepeat, isRefed)
+        -[inspect.custom](_, options)
+        refresh(): Timeout
+        unref(): Timeout
+        ref(): Timeout
+        hasRef(): boolean
+      }
+
+      note left of Timeout::_idleStart
+        the timestamp when timeout was inserted into list
+      endnote
+
+      Timeout ..> lib.internal.linkedlist.L
+      Timeout ..> lib.internal.priority_queue.PriorityQueue
+
+      class TimersList {
+        _idleNext: TimersList
+        _idlePrev: Timeout
+        expiry: number
+        id: number
+        msecs: number
+        priorityQueuePosition: null | number
+
+        constructor(expiry, msecs)
+        -[inspect.custom](_, options)
+      }
+
+      note left of TimersList
+        expiry is a timestamp will expire
+      endnote
+
+      class ImmediateList {
+        head: null
+        tail: null
+
+        constructor()
+        append(item)
+        remove(item)
+      }
+    }
+  }
+}
+
+@enduml

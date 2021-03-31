@@ -1,0 +1,17 @@
+@startuml linkedlist
+
+namespace lib {
+  namespace internal {
+    namespace linkedlist <<internal>> {
+      class L {
+        {static} init(list)
+        {static} peek(list)
+        {static} remove(item)
+        {static} append(list, item)
+        {static} isEmpty(list)
+      }
+    }
+  }
+}
+
+@enduml
