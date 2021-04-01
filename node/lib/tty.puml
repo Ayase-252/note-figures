@@ -1,0 +1,17 @@
+@startuml
+
+!include net.puml
+
+namespace lib {
+  namespace tty <<Public Module>> {
+    class ReadStream extends lib.net.Socket {
+      constructor(fd: number)
+    }
+
+    class WriteStream extends lib.net.Socket {
+      constructor(fd: number)
+    }
+  }
+}
+
+@enduml
