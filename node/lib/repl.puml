@@ -1,0 +1,39 @@
+@startuml repl
+
+!include stream.puml
+
+namespace lib {
+  namespace repl <<Public Module>>{
+    enum REPLMode {}
+    class REPLServer {
+      +{decpreated}inputStream: Readable
+      +input: Readable
+      +{decpreated}outputStream: Writable
+      +output: Writable
+      +allowBlockingCompletions: boolean
+      +useColors: boolean
+      -_domain
+      useGlobal: boolean
+      ignoreUndefined: boolean
+      replMode: REPLMode
+      underscoreAssigned: boolean
+      last
+      underscoreErrAssigned: boolean
+      lastError
+      breakEvalOnSigint: boolean
+      editorMode: boolean
+      -[kContextId]
+      eval: (code, context, file, cb): any
+
+
+      -constructor(prompt, stream, eval_, useGlobal, ignoreUndefined, replMode)
+      -eval()
+    }
+
+    REPLServer --> lib.stream.Readable
+    REPLServer --> lib.stream.Writable
+  }
+}
+
+
+@enduml
