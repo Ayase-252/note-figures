@@ -4,53 +4,95 @@
 
 namespace lib {
   namespace stream<<Public Module>> {
-    class Stream extends event.EventEmitter {
+    class Stream extends lib.events.EventEmitter {
         pipe(dest: Writable, options): Writable
     }
 
     class ReadableState {
+      objectMode: boolean
+      highWaterMark: number
+      buffer: BufferList
+      length: 0
+      pipes: Array
+      flowing: null
+      ended: boolean
+      endEmitted: boolean
+      reading: boolean
+      constructed: boolean
+      sync: boolean
+      needReadable: boolean
+      emittedReadable: boolean
+      readableListening: boolean
+      resumeScheduled: boolean
+      [kPaused]: null
+
+      errorEmitted: boolean
+
+      emitClose: boolean
+      autoDestroy: boolean
+      destoryed: boolean
+
+      errored: Error
+      closed: boolean
+      closedEmitted: boolean
+
+      defaultEncoding: string
+      awaitDriainWriter: null
+      miltiAwaitDrain: boolean
+
+      readingMore: boolean
+      decoder: Decoder
+      encoding: string
     }
 
-    class Readable extends Stream {
-        _readableState: ReadableState
-        _read: Function
-        _destory: Function
-        _construct: Function
-        readable: boolean
-        readableHighWaterMark: number
-        readableBuffer: Array
-        readableFlowing
-        readableLength
-        readtableObjectMode
-        readableEncoding
-        destroyed
-        readableEnded
-        pipesCount
-        paused
+    note left of ReadableState::errored
+      Cached Error Object on runtime
+    endnote
 
-        constructor(options)
-        destroy()
-        _undestroy()
-        _destory()
-        push(chunk: string | Buffer | Uint8Array | null, encoding: string)
-        unshift(chunk: string | Buffer | Uint8Array | null, encoding: string): boolean
-        isPaused(): boolean
-        setEncoding(enc: string)
-        read(n: number)
-        {abstract} _read(n: number)
-        pipe(dest, pipeOpts)
-        unpipe(dest)
-        on(event, fn)
-        addListener(event, fn)
-        removeListener(event, fn)
-        off(event, fn)
-        removeAllListeners(ev)
-        resume()
-        pause()
-        {static} from(iterable, opts)
+
+    class Readable extends Stream {
+      _readableState: ReadableState
+      readable: boolean
+      readableHighWaterMark: number
+      readableBuffer: Array
+      readableFlowing
+      readableLength
+      readtableObjectMode
+      readableEncoding
+      destroyed
+      readableEnded
+      pipesCount
+      paused
+
+      constructor(options)
+      destroy()
+      _undestroy()
+
+      unshift(chunk: string | Buffer | Uint8Array | null, encoding: string): boolean
+      isPaused(): boolean
+      setEncoding(enc: string)
+      read(n: number)
+      {abstract} _read(n: number)
+      pipe(dest, pipeOpts)
+      unpipe(dest: Writable)
+      on(event, fn)
+      addListener(event, fn)
+      removeListener(event, fn)
+      off(event, fn)
+      removeAllListeners(ev)
+      resume()
+      pause()
+      [Symbol.asyncIterator]()
+      {static} from(iterable, opts)
+
+      #push(chunk: string | Buffer | Uint8Array | null, encoding?: string): boolean
+      #_construct(callback)
+      #_read(n: number)
+      #_destory(err, callback)
     }
 
     Readable *--> ReadableState
+    Readable ..> Writable
 
     class WritableState {
       objectMode: boolean
@@ -133,7 +175,7 @@ namespace lib {
       true, iff. both Readable side and WritableState are destoryed.
     endnote
 
-    class Transfrom extends Duplex {
+    class Transform extends Duplex {
       [kCallBack]
       final(callback) 
 
